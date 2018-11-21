@@ -14,8 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+#from django.conf.urls import handler404, handler500
+
+handler400 = 'main.views.custom_400_view'
+handler403 = 'main.views.custom_403_view'
+handler404 = 'main.views.custom_404_view'
+handler500 = 'main.views.custom_500_view'
 
 urlpatterns = [
+    path('pizza2go/', include('pizza2go.urls')),
     path('admin/', admin.site.urls),
 ]
