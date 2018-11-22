@@ -3,13 +3,13 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 
 class Topping(models.Model):
-    name = models.CharField(max_length = 30)
+    name = models.CharField(unique=True, max_length = 30)
 
     def __str__(self):
         return self.name
 
 class Pizza(models.Model):
-    name = models.CharField(max_length = 30)
+    name = models.CharField(unique=True, max_length = 30)
     toppings = models.ManyToManyField(Topping)
 
     def __str__(self):
@@ -27,5 +27,9 @@ class PizzaSize(models.Model):
             MaxValueValidator(Decimal("99.99")),
             MinValueValidator(Decimal("0.01"))
     ])
+    
+    class Meta:
+        unique_together = ('name', 'pizza',)
+
     def __str__(self):
         return self.name

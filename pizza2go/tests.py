@@ -3,15 +3,216 @@ from .models import Pizza, PizzaSize, Topping
 from decimal import Decimal
 from django.core.exceptions import ValidationError
 
+class ToppingTests(TestCase):
+    def test_is_created_working_case(self):
+        """
+        Topping with proper values is created
+        """
+        topping = Topping(name="Pickles")
+        #full_clean called to check validations (MinValueValidator, MaxValueValidator)
+        #   Called explicitly to not cause issues in forms
+        #Another solution: use a ModelForm
+        topping.full_clean()
+        topping.save()
+        self.assertTrue(topping.pk, not None)
+
+    def test_is_created_duplicate_case(self):
+        """
+        Duplicate topping is not created
+        """
+        topping = Topping(name="Sour cream")
+        topping.full_clean()
+        topping.save()
+        topping = Topping(name="Sour cream")
+        with self.assertRaises(ValidationError):
+            topping.full_clean()
+            topping.save()
+            if topping.pk is None:
+                raise ValidationError
+
+    def test_is_created_with_empty_name(self):
+        """
+        Topping without name is not created
+        """
+        topping = Topping()
+        with self.assertRaises(ValidationError):
+            topping.full_clean()
+            topping.save()
+            if topping.pk is None:
+                raise ValidationError
+
+    def test_is_created_with_no_name(self):
+        """
+        Topping with empty name is not created
+        """
+        topping = Topping(name="")
+        with self.assertRaises(ValidationError):
+            topping.full_clean()
+            topping.save()
+            if topping.pk is None:
+                raise ValidationError
+
+class PizzaTests(TestCase):
+    #For every test (only setUp)
+    def setUp(self):
+        self.topping = Topping(name="Pineapple")
+        self.topping.save()
+
+    def test_is_created_working_case(self):
+        """
+        Pizza with proper values is created
+        """
+        pizza = Pizza(name="Hawaii pizza")
+        #full_clean called to check validations (MinValueValidator, MaxValueValidator)
+        #   Called explicitly to not cause issues in forms
+        #Another solution: use a ModelForm
+        pizza.full_clean()
+        pizza.save()
+        pizza.toppings.add(self.topping)
+        self.assertTrue(pizza.pk, not None)
+
+    def test_is_created_duplicate_name_case(self):
+        """
+        Pizza with duplicate name is not created
+        """
+        pizza = Pizza(name="Hawaii pizza")
+        pizza.full_clean()
+        pizza.save()
+        pizza = Pizza(name="Hawaii pizza")
+        with self.assertRaises(ValidationError):
+            pizza.full_clean()
+            pizza.save()
+            if pizza.pk is None:
+                raise ValidationError
+            
+
+    def test_is_created_with_no_topping(self):
+        """
+        Pizza without topping is created
+        """
+        pizza = Pizza(name="Hawaii pizza")
+        pizza.full_clean()
+        pizza.save()
+        self.assertTrue(pizza.pk, not None)
+
+    def test_is_created_with_empty_name(self):
+        """
+        Pizza without name is not created
+        """
+        pizza = Pizza(name="")
+    
+        with self.assertRaises(ValidationError):
+            pizza.full_clean()
+            pizza.save()
+            if pizza.pk is None:
+                raise ValidationError
+
+    def test_is_created_with_no_name(self):
+        """
+        Pizza without name is not created
+        """
+        pizza = Pizza()
+    
+        with self.assertRaises(ValidationError):
+            pizza.full_clean()
+            pizza.save()
+            if pizza.pk is None:
+                raise ValidationError
+
 class PizzaSizeTests(TestCase):
-    #For every test
+    #For every test (only setUp)
     def setUp(self):
         topping = Topping(name="Cheese")
         topping.save()
         self.pizza = Pizza(name="Cheese Pizza")
         self.pizza.save()
         self.pizza.toppings.add(topping)     
-        
+
+    def test_is_created_working_case(self):
+        """
+        Pizza size with working values is created
+        """
+        pizza_size = PizzaSize(
+            name="Normal",
+            diameter = 30,
+            pizza = self.pizza,
+            price = Decimal(7))
+        pizza_size.full_clean()
+        pizza_size.save()
+        self.assertTrue(pizza_size.pk, not None)
+
+    def test_is_created_duplicate_pizza_and_name_case(self):
+        """
+        Pizza size with duplicate pizza and name is not created
+        """
+        pizza_size = PizzaSize(
+            name="Normal",
+            diameter = 30,
+            pizza = self.pizza,
+            price = Decimal(7))
+        pizza_size.full_clean()
+        pizza_size.save()
+        pizza_size = PizzaSize(
+            name="Normal",
+            diameter = 31, #Slightly different price to differentiate
+            pizza = self.pizza,
+            price = Decimal(8)) #Slightly different price to differentiate
+        with self.assertRaises(ValidationError):
+            #full_clean called to check validations (MinValueValidator, MaxValueValidator)
+            #   Called explicitly to not cause issues in forms
+            #Another solution: use a ModelForm
+            pizza_size.full_clean() 
+            pizza_size.save()
+            if pizza_size.pk is None:
+                raise ValidationError
+
+    def test_is_created_with_different_names_case(self):
+        """
+        Pizza size with same pizza but different names is created
+        """
+        pizza_size = PizzaSize(
+            name="Normal",
+            diameter = 30,
+            pizza = self.pizza,
+            price = Decimal(7))
+        pizza_size.full_clean()
+        pizza_size.save()
+        pizza_size = PizzaSize(
+            name="More Normal",
+            diameter = 30,
+            pizza = self.pizza,
+            price = Decimal(7))
+        pizza_size.full_clean()
+        pizza_size.save()
+        self.assertTrue(pizza_size.pk, not None)
+
+    def test_is_created_with_same_name_different_pizza_case(self):
+        """
+        Pizza size with same name but different pizza is created
+        """
+        pizza_size = PizzaSize(
+            name="Normal",
+            diameter = 30,
+            pizza = self.pizza,
+            price = Decimal(7))
+        pizza_size.full_clean()
+        pizza_size.save()
+
+        topping = Topping(name="Mozzarella")
+        topping.save()
+        pizza = Pizza(name="Mozzarella Pizza")
+        pizza.save()
+        pizza.toppings.add(topping)
+
+        pizza_size = PizzaSize(
+            name="Normal",
+            diameter = 30,
+            pizza = pizza,
+            price = Decimal(7))
+        pizza_size.full_clean()
+        pizza_size.save()
+        self.assertTrue(pizza_size.pk, not None)
+
     def test_is_created_with_negative_diameter(self):
         """
         Pizza size with negative diameter -1 is not created
@@ -22,14 +223,10 @@ class PizzaSizeTests(TestCase):
             pizza = self.pizza,
             price = Decimal(10))
         with self.assertRaises(ValidationError):
-            #full_clean called to check MinValueValidator, MaxValueValidator
-            #   Called explicitly to not cause issues in forms
-            #Another solution: use a ModelForm
             pizza_size.full_clean() 
             pizza_size.save()
             if pizza_size.pk is None:
                 raise ValidationError
-        #self.assertIs(pizza_size.pk, None)
 
     def test_is_created_with_zero_diameter(self):
         """
