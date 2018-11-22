@@ -87,3 +87,103 @@ class PizzaSizeTests(TestCase):
             if pizza_size.pk is None:
                 raise ValidationError
     
+    def test_is_created_with_negative_price(self):
+        """
+        Pizza with negative price -0.01 is not created
+        """
+        pizza_size = PizzaSize(
+            name="Debt pizza", 
+            diameter=10,
+            pizza = self.pizza,
+            price = Decimal("-0.01"))
+        with self.assertRaises(ValidationError):
+            pizza_size.full_clean()
+            pizza_size.save()
+            if pizza_size.pk is None:
+                raise ValidationError
+
+    def test_is_created_with_zero_price(self):
+        """
+        Pizza with price 0 is not created
+        """
+        pizza_size = PizzaSize(
+            name="Free pizza", 
+            diameter=10,
+            pizza = self.pizza,
+            price = Decimal("0"))
+        with self.assertRaises(ValidationError):
+            pizza_size.full_clean()
+            pizza_size.save()
+            if pizza_size.pk is None:
+                raise ValidationError
+
+    def test_is_created_with_too_small_price(self):
+        """
+        Pizza with price 0.001 is not created
+        """
+        pizza_size = PizzaSize(
+            name="Almost free pizza", 
+            diameter=10,
+            pizza = self.pizza,
+            price = Decimal("0.001"))
+        with self.assertRaises(ValidationError):
+            pizza_size.full_clean()
+            pizza_size.save()
+            if pizza_size.pk is None:
+                raise ValidationError
+
+    def test_is_created_with_too_many_decimal_numbers(self):
+        """
+        Pizza with price 1.001 is not created
+        """
+        pizza_size = PizzaSize(
+            name="Non-existing price pizza", 
+            diameter=10,
+            pizza = self.pizza,
+            price = Decimal("1.001"))
+        with self.assertRaises(ValidationError):
+            pizza_size.full_clean()
+            pizza_size.save()
+            if pizza_size.pk is None:
+                raise ValidationError
+
+    def test_is_created_with_minimum_price(self):
+        """
+        Pizza with minimum price 0.01 is created
+        """
+        pizza_size = PizzaSize(
+            name="Cheapest pizza", 
+            diameter=10,
+            pizza = self.pizza,
+            price = Decimal("0.01"))
+        pizza_size.full_clean()
+        pizza_size.save()
+        self.assertTrue(pizza_size.pk, not None)
+
+    def test_is_created_with_maximum_price(self):
+        """
+        Pizza with maximum price 99.99 is created
+        """
+        pizza_size = PizzaSize(
+            name="Very expensive pizza", 
+            diameter=10,
+            pizza = self.pizza,
+            price = Decimal("99.99"))
+        pizza_size.full_clean()
+        pizza_size.save()
+        self.assertTrue(pizza_size.pk, not None)
+
+    def test_is_created_with_too_expensive_price(self):
+        """
+        Pizza with too expensive price 100 is not created
+        """
+        pizza_size = PizzaSize(
+            name="Too expensive pizza", 
+            diameter=10,
+            pizza = self.pizza,
+            price = Decimal("100"))
+        with self.assertRaises(ValidationError):
+            pizza_size.full_clean()
+            pizza_size.save()
+            if pizza_size.pk is None:
+                raise ValidationError
