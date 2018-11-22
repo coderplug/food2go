@@ -4,19 +4,22 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 
 class PizzaSizeTests(TestCase):
+    #For every test
+    def setUp(self):
+        topping = Topping(name="Cheese")
+        topping.save()
+        self.pizza = Pizza(name="Cheese Pizza")
+        self.pizza.save()
+        self.pizza.toppings.add(topping)     
+        
     def test_is_created_with_negative_diameter(self):
         """
         Pizza with negative diameter -1 is not created
         """
-        topping = Topping(name="Cheese")
-        topping.save()
-        pizza = Pizza(name="Cheese Pizza")
-        pizza.save()
-        pizza.toppings.add(topping)
         pizza_size = PizzaSize(
-            name="Extra negative", 
+            name="Extra negative",
             diameter=-1,
-            pizza = pizza,
+            pizza = self.pizza,
             price = Decimal(10))
         with self.assertRaises(ValidationError):
             #full_clean called to check MinValueValidator, MaxValueValidator
@@ -32,15 +35,10 @@ class PizzaSizeTests(TestCase):
         """
         Pizza with diameter 0 is not created
         """
-        topping = Topping(name="Cheese")
-        topping.save()
-        pizza = Pizza(name="Cheese Pizza")
-        pizza.save()
-        pizza.toppings.add(topping)
         pizza_size = PizzaSize(
             name="Empty space", 
             diameter=0,
-            pizza = pizza,
+            pizza = self.pizza,
             price = Decimal(10))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
@@ -52,15 +50,10 @@ class PizzaSizeTests(TestCase):
         """
         Pizza with minimum diameter 1 is created
         """
-        topping = Topping(name="Cheese")
-        topping.save()
-        pizza = Pizza(name="Cheese Pizza")
-        pizza.save()
-        pizza.toppings.add(topping)
         pizza_size = PizzaSize(
             name="Extra Small",
             diameter=1,
-            pizza=pizza,
+            pizza = self.pizza,
             price= Decimal(10))
         pizza_size.full_clean()
         pizza_size.save()
@@ -70,13 +63,10 @@ class PizzaSizeTests(TestCase):
         """
         Pizza with maximum diameter 100 is created
         """
-        pizza = Pizza(name="Cheese Pizza")
-        pizza.save()
-        pizza.toppings.create(name="Cheese")
         pizza_size = PizzaSize(
             name="Extra Large", 
             diameter=100,
-            pizza = pizza,
+            pizza = self.pizza,
             price = Decimal(10))
         pizza_size.full_clean()
         pizza_size.save()
@@ -86,15 +76,10 @@ class PizzaSizeTests(TestCase):
         """
         Pizza with maximum diameter 101 is not created
         """
-        topping = Topping(name="Cheese")
-        topping.save()
-        pizza = Pizza(name="Cheese Pizza")
-        pizza.save()
-        pizza.toppings.add(topping)
         pizza_size = PizzaSize(
             name="Too Extra Large", 
             diameter=101,
-            pizza = pizza,
+            pizza = self.pizza,
             price = Decimal(10))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
