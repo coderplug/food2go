@@ -18,19 +18,14 @@ class Pizza(models.Model):
 class PizzaSize(models.Model):
     name = models.CharField(max_length = 30)
     diameter = models.IntegerField(validators=[
-            MaxValueValidator(100),
-            MinValueValidator(1)
-        ])
+        MaxValueValidator(100),
+        MinValueValidator(1)
+    ])
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
-    price = models.OneToOneField('PizzaPrice', on_delete=models.CASCADE)
-
+    #price = models.OneToOneField('PizzaPrice', on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=4, decimal_places=2, validators=[
+            MaxValueValidator(Decimal("99.99")),
+            MinValueValidator(Decimal("0.01"))
+    ])
     def __str__(self):
         return self.name
-
-#TODO: Pizza and Size primary key
-#TODO: Allow higher prices than 9.99
-class PizzaPrice(models.Model):
-    price = models.DecimalField(max_digits=3, decimal_places=2)
-
-    def __str__(self):
-        return str(self.price)
