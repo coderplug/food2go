@@ -14,7 +14,7 @@ class ToppingTests(TestCase):
         #Another solution: use a ModelForm
         topping.full_clean()
         topping.save()
-        self.assertTrue(topping.pk, not None)
+        self.assertIs(topping.pk, not None)
 
     def test_is_created_duplicate_case(self):
         """
@@ -69,7 +69,7 @@ class PizzaTests(TestCase):
         pizza.full_clean()
         pizza.save()
         pizza.toppings.add(self.topping)
-        self.assertTrue(pizza.pk, not None)
+        self.assertIs(pizza.pk, not None)
 
     def test_is_created_duplicate_name_case(self):
         """
@@ -93,7 +93,7 @@ class PizzaTests(TestCase):
         pizza = Pizza(name="Hawaii pizza")
         pizza.full_clean()
         pizza.save()
-        self.assertTrue(pizza.pk, not None)
+        self.assertIs(pizza.pk, not None)
 
     def test_is_created_with_empty_name(self):
         """
@@ -139,7 +139,7 @@ class PizzaSizeTests(TestCase):
             price = Decimal(7))
         pizza_size.full_clean()
         pizza_size.save()
-        self.assertTrue(pizza_size.pk, not None)
+        self.assertIs(pizza_size.pk, not None)
 
     def test_is_created_duplicate_pizza_and_name_case(self):
         """
@@ -184,7 +184,7 @@ class PizzaSizeTests(TestCase):
             price = Decimal(7))
         pizza_size.full_clean()
         pizza_size.save()
-        self.assertTrue(pizza_size.pk, not None)
+        self.assertIs(pizza_size.pk, not None)
 
     def test_is_created_with_same_name_different_pizza_case(self):
         """
@@ -211,7 +211,7 @@ class PizzaSizeTests(TestCase):
             price = Decimal(7))
         pizza_size.full_clean()
         pizza_size.save()
-        self.assertTrue(pizza_size.pk, not None)
+        self.assertIs(pizza_size.pk, not None)
 
     def test_is_created_with_negative_diameter(self):
         """
@@ -254,7 +254,7 @@ class PizzaSizeTests(TestCase):
             price= Decimal(10))
         pizza_size.full_clean()
         pizza_size.save()
-        self.assertTrue(pizza_size.pk, not None)
+        self.assertIs(pizza_size.pk, not None)
 
     def test_is_created_with_maximum_diameter(self):
         """
@@ -267,7 +267,7 @@ class PizzaSizeTests(TestCase):
             price = Decimal(10))
         pizza_size.full_clean()
         pizza_size.save()
-        self.assertTrue(pizza_size.pk, not None)
+        self.assertIs(pizza_size.pk, not None)
 
     def test_is_created_with_over_maximum_diameter(self):
         """
@@ -355,7 +355,7 @@ class PizzaSizeTests(TestCase):
             price = Decimal("0.01"))
         pizza_size.full_clean()
         pizza_size.save()
-        self.assertTrue(pizza_size.pk, not None)
+        self.assertIs(pizza_size.pk, not None)
 
     def test_is_created_with_maximum_price(self):
         """
@@ -368,7 +368,7 @@ class PizzaSizeTests(TestCase):
             price = Decimal("99.99"))
         pizza_size.full_clean()
         pizza_size.save()
-        self.assertTrue(pizza_size.pk, not None)
+        self.assertIs(pizza_size.pk, not None)
 
     def test_is_created_with_too_expensive_price(self):
         """
