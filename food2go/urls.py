@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-#from django.conf.urls import handler404, handler500
 
 handler400 = 'main.views.custom_400_view'
 handler403 = 'main.views.custom_403_view'
@@ -23,6 +22,7 @@ handler404 = 'main.views.custom_404_view'
 handler500 = 'main.views.custom_500_view'
 
 urlpatterns = [
-    path('pizza2go/', include('pizza2go.urls')),
+    path('', include('main.urls'), name='main'),
+    path('pizza2go/', include('pizza2go.urls'), name='pizza2go'),
     path('admin/', admin.site.urls),
 ]
