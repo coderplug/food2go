@@ -14,22 +14,34 @@
     <title>Hello, world!</title>
   </head>
   <body>
-    <h1>Pizza2Go</h1>
+    
+    <h1>Pizza2Go </h1>
     {% if ordered_pizza_list %} 
       {% for pizza in ordered_pizza_list %}
-        <h3>{{ pizza.name }}</h3>
-        <h4>Topping</h4>
-        <ul>
-          {% for topping in pizza.toppings.all %}
-              <li>{{ topping.name }}</li>
-          {% endfor %}
-        </ul>
-        <h4>Sizes</h4>
-        <ul>
-          {% for size in pizza.pizzasize_set.all %}
-              <li>{{ size.name }} - {{size.diameter}} - {{size.price}}</li>
-          {% endfor %}
-        </ul>
+        <h3>{{pizza.name}}</h3>
+        <details>
+          <summary>Toppings</summary>
+          <ul>
+            {% for topping in pizza.toppings.all %}
+                <li>{{ topping.name }}</li>
+            {% endfor %}
+          </ul>
+        </details>
+        <form action="{% url 'pizza2go:pizza2go-add_to_cart' %}" method="post">
+          {% csrf_token %}
+          <div class="form-group" name="select-sizes">
+              <label for="sizes">Sizes</label>
+              <select id="sizes" class="form-control" name="sizes" required>
+                  <option value="">Choose...</option>
+                  {% for size in pizza.pizzasize_set.all %}
+                    <option value={{size.id}}>{{ size.name }}, {{size.diameter}} cm, {{size.price}} €</option>
+                  {% endfor %}
+              </select>
+          </div>
+          {% if user.is_authenticated %}
+          <button class="btn btn-success" type="submit">Add to cart ({{ pizza.name }})</button>
+          {% endif %}
+        </form>
       {% endfor %}
     {% else %}
       <p>No pizzas are available.</p>

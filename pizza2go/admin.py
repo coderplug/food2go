@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Pizza, Topping, PizzaSize
+from .models import Pizza, Topping, PizzaSize, UserShoppingCart
 
 class ToppingInline(admin.TabularInline):
     model = Topping
@@ -21,3 +21,4 @@ class PizzaAdmin(admin.ModelAdmin):
 admin.site.register(Pizza, PizzaAdmin)
 admin.site.register(PizzaSize)
 admin.site.register(Topping)
+admin.site.register(UserShoppingCart)
