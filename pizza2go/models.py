@@ -40,3 +40,10 @@ class UserShoppingCart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
     pizza_size = models.ForeignKey(PizzaSize, on_delete=models.CASCADE)
+
+    def __str__(self):
+        username = self.user.username
+        pizza_size_name = self.pizza_size.name
+        pizza_name = self.pizza.name
+        result = "%s: %s %s pizza" % (username, pizza_size_name, pizza_name)
+        return result

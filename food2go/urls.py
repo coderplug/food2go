@@ -15,14 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 
-handler400 = 'main.views.custom_400_view'
-handler403 = 'main.views.custom_403_view'
-handler404 = 'main.views.custom_404_view'
-handler500 = 'main.views.custom_500_view'
+handler400 = TemplateView.as_view(template_name='errors/400.html')
+handler403 = TemplateView.as_view(template_name='errors/403.html') #'main.views.custom_403_view'
+handler404 = TemplateView.as_view(template_name='errors/404.html') #'main.views.custom_404_view'
+handler500 = TemplateView.as_view(template_name='errors/500.html') #'main.views.custom_500_view'
 
 urlpatterns = [
-    path('', include('main.urls'), name='main'),
+    #path('', include('main.urls'), name='main'),
     path('pizza2go/', include('pizza2go.urls'), name='pizza2go'),
     path('admin/', admin.site.urls),
+    #link structure imported from library
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
 ]

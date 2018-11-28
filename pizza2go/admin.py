@@ -21,4 +21,5 @@ class PizzaAdmin(admin.ModelAdmin):
 admin.site.register(Pizza, PizzaAdmin)
 admin.site.register(PizzaSize)
 admin.site.register(Topping)
+#TODO: Pizza sizes not filtering in User shopping cart view
 admin.site.register(UserShoppingCart)

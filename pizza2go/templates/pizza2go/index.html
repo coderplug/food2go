@@ -14,7 +14,9 @@
     <title>Hello, world!</title>
   </head>
   <body>
-    
+    {% if user.is_authenticated %}
+      <a href="{% url 'pizza2go:pizza2go-shopping_cart' %}">View Shopping Cart</a>
+    {% endif %}
     <h1>Pizza2Go </h1>
     {% if ordered_pizza_list %} 
       {% for pizza in ordered_pizza_list %}
