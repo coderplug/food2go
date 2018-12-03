@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Pizza2Go{% endblock %}
+
+{% block content %}
+  <h1>Pizza2Go</h1>
+  {% if user.is_authenticated %}
+  <p><a href="{% url 'pizza2go:pizza2go-shopping_cart' %}">View Shopping Cart</a></p>
+  <p><a href="{% url 'pizza2go:pizza2go-orders' %}">View Orders</a></p>
+  {% endif %}
+
+  {% block content_pizza2go %}
+  {% endblock %}
+{% endblock %}
