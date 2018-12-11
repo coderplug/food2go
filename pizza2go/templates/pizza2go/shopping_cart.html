@@ -7,9 +7,10 @@
     {% if ordered_items_list %}
         <ul>
             {% for item in ordered_items_list %}
-                <li>{{ item.pizza_size }} {{ item.pizza }}</li>
+                <li>{{ item.pizza_size }} {{ item.pizza }}</li> <!--Removal is missing-->
             {% endfor %}
         </ul>
+        <!--Here place button to pay up, another screen (purchase maybe)-->
     {% else %}
         <p>You have no items in shopping cart.</p>
     {% endif %}
