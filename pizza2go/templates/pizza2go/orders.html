@@ -3,7 +3,19 @@
 {% block title %}Orders{% endblock %}
 
 {% block content_pizza2go %}
+
     <h2>Orders</h2>
-    <!--Place orders here, no buttons.
+    {% if user.is_authenticated %}
+        {% if order_list %} 
+            {% for order in order_list %}
+                <p>hi</p>
+            {% endfor %}
+        {% else %}
+            <p>No orders are available.</p>
+        {% endif %}
+    {% else %}
+        <p>Please login to see your orders.</p>
+    {% endif %}
+        <!--Place orders here, no buttons.
     All user orders (active and history)-->
 {% endblock %}

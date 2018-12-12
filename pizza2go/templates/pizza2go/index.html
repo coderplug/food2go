@@ -19,12 +19,16 @@
           {% csrf_token %}
           <div class="form-group" name="select-sizes">
               <label for="sizes">Sizes</label>
-              <select id="sizes" class="form-control" name="sizes" required>
-                  <option value="">Choose...</option>
-                  {% for size in pizza.pizzasize_set.all %}
-                    <option value={{size.id}}>{{ size.name }}, {{size.diameter}} cm, {{size.price}} €</option>
-                  {% endfor %}
-              </select>
+              <div class="row">
+                <div class="form-group col-lg-1">
+                  <select id="sizes" class="form-control" name="sizes" required>
+                    <option value="">Choose...</option>
+                    {% for size in pizza.pizzasize_set.all %}
+                      <option value={{size.id}}>{{ size.name }}, {{size.diameter}} cm, {{size.price}} €</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div> 
           </div>
           {% if user.is_authenticated %}
           <button class="btn btn-success" type="submit">Add to cart ({{ pizza.name }})</button>

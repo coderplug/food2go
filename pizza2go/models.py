@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 from django.contrib.auth.models import User
+import datetime
 
 class Topping(models.Model):
     name = models.CharField(unique=True, max_length = 30)
@@ -46,4 +47,27 @@ class UserShoppingCart(models.Model):
         pizza_size_name = self.pizza_size.name
         pizza_name = self.pizza.name
         result = "%s: %s %s pizza" % (username, pizza_size_name, pizza_name)
+        return result
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_created = models.DateField(default=datetime.date.today)
+    active = models.BooleanField(default=True)
+    
+    def __str__(self):
+        username = self.user.username
+        active = "active" if self.active else "inactive"
+        result = "%s's %s order, created at %s" % (username, active, self.date_created)
+        return result
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
+    pizza_size = models.ForeignKey(PizzaSize, on_delete=models.CASCADE)
+
+    def __str__(self):
+        order = self.order
+        pizza_size_name = self.pizza_size.name
+        pizza_name = self.pizza.name
+        result = "%s order - %s %s pizza" % (order, pizza_size_name, pizza_name)
         return result

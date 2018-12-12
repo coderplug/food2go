@@ -4,14 +4,25 @@
 
 {% block content_pizza2go %}
     <h2>Shopping Cart</h2>
-    {% if ordered_items_list %}
-        <ul>
-            {% for item in ordered_items_list %}
-                <li>{{ item.pizza_size }} {{ item.pizza }}</li> <!--Removal is missing-->
-            {% endfor %}
-        </ul>
-        <!--Here place button to pay up, another screen (purchase maybe)-->
+    {% if user.is_authenticated %}
+        {% if ordered_items_list %}
+            <ul>
+                {% for item in ordered_items_list %}
+                    <form action="{% url 'pizza2go:pizza2go-remove_from_cart' item_id=item.id %}" method="post">
+                        {% csrf_token %}
+                        <li>{{ item.pizza_size }} {{ item.pizza }}
+                        <button class="btn btn-danger btn-sm" type="submit">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
+                {% endfor %}
+            </ul>
+            <button class="btn btn-lg btn-success" type="submit">Order</button>
+            <!--Here place button to pay up, another screen (purchase maybe)-->
+        {% else %}
+            <p>You have no items in shopping cart.</p>
+        {% endif %}
     {% else %}
-        <p>You have no items in shopping cart.</p>
+        <p>Please login to see your shopping cart.</p>
     {% endif %}
 {% endblock %}

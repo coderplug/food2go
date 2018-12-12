@@ -3,7 +3,7 @@
 {% block title %}Pizza2Go{% endblock %}
 
 {% block content %}
-  <h1>Pizza2Go</h1>
+  <h1><a href="{% url 'pizza2go:pizza2go-index' %}">Pizza2Go</a></h1>
   {% if user.is_authenticated %}
   <p><a href="{% url 'pizza2go:pizza2go-shopping_cart' %}">View Shopping Cart</a></p>
   <p><a href="{% url 'pizza2go:pizza2go-orders' %}">View Orders</a></p>
