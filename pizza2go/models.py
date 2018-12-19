@@ -1,24 +1,23 @@
+from decimal import Decimal
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from decimal import Decimal
 from django.contrib.auth.models import User
-import datetime
 
 class Topping(models.Model):
-    name = models.CharField(unique=True, max_length = 30)
+    name = models.CharField(unique=True, max_length=30)
 
     def __str__(self):
         return self.name
 
 class Pizza(models.Model):
-    name = models.CharField(unique=True, max_length = 30)
+    name = models.CharField(unique=True, max_length=30)
     toppings = models.ManyToManyField(Topping)
 
     def __str__(self):
         return self.name
 
 class PizzaSize(models.Model):
-    name = models.CharField(max_length = 30)
+    name = models.CharField(max_length=30)
     diameter = models.IntegerField(validators=[
         MaxValueValidator(100),
         MinValueValidator(1)
@@ -26,10 +25,10 @@ class PizzaSize(models.Model):
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
     #price = models.OneToOneField('PizzaPrice', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=4, decimal_places=2, validators=[
-            MaxValueValidator(Decimal("99.99")),
-            MinValueValidator(Decimal("0.01"))
+        MaxValueValidator(Decimal("99.99")),
+        MinValueValidator(Decimal("0.01"))
     ])
-    
+
     class Meta:
         ordering = ['diameter']
         unique_together = ('name', 'pizza',)
@@ -51,9 +50,19 @@ class UserShoppingCart(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_created = models.DateField(default=datetime.date.today)
+    date_created = models.DateField(auto_now_add=True)
+    time_created = models.TimeField(auto_now_add=True)
+    date_finished = models.DateField(null=True, blank=True)
+    time_finished = models.TimeField(null=True, blank=True)
     active = models.BooleanField(default=True)
-    
+
+    def get_price(self):
+        order_sum = Decimal(0.0)
+        order_items = self.orderitem_set.all()
+        for item in order_items:
+            order_sum += item.pizza_size.price
+        return order_sum
+
     def __str__(self):
         username = self.user.username
         active = "active" if self.active else "inactive"

@@ -1,0 +1,26 @@
+Tests
+UI:
+    Allow change user data
+Pizza2Go:
+    Pizza:
+        Favourite orders
+        Ordering:
+            Name
+            Order count
+            Rating (?)
+    Order:
+        Make favourite order
+        Add details pop-up (ajax(?) + bootstrap)
+        Details:
+            Add current order items
+    Sauce:
+        Add sauces to the menu (after pizza's)
+    About:
+        Location (Google Maps API (?))
+Frontend:
+    Header menu
+    Errors:
+        User friendly message
+    Footer
+    Mobile-friendly
+    Animations (?)

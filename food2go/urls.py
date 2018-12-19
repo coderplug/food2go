@@ -17,10 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 
-handler400 = TemplateView.as_view(template_name='errors/400.html')
-handler403 = TemplateView.as_view(template_name='errors/403.html') #'main.views.custom_403_view'
-handler404 = TemplateView.as_view(template_name='errors/404.html') #'main.views.custom_404_view'
-handler500 = TemplateView.as_view(template_name='errors/500.html') #'main.views.custom_500_view'
+HANDLER400 = TemplateView.as_view(template_name='errors/400.html')
+HANDLER403 = TemplateView.as_view(template_name='errors/403.html') #'main.views.custom_403_view'
+HANDLER404 = TemplateView.as_view(template_name='errors/404.html') #'main.views.custom_404_view'
+HANDLER500 = TemplateView.as_view(template_name='errors/500.html') #'main.views.custom_500_view'
 
 urlpatterns = [
     #path('', include('main.urls'), name='main'),

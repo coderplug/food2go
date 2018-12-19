@@ -1,7 +1,7 @@
-from django.test import TestCase
-from .models import Pizza, PizzaSize, Topping
 from decimal import Decimal
+from django.test import TestCase
 from django.core.exceptions import ValidationError
+from .models import Pizza, PizzaSize, Topping
 
 class ToppingTests(TestCase):
     def test_is_created_working_case(self):
@@ -84,7 +84,6 @@ class PizzaTests(TestCase):
             pizza.save()
             if pizza.pk is None:
                 raise ValidationError
-            
 
     def test_is_created_with_no_topping(self):
         """
@@ -100,7 +99,7 @@ class PizzaTests(TestCase):
         Pizza without name is not created
         """
         pizza = Pizza(name="")
-    
+
         with self.assertRaises(ValidationError):
             pizza.full_clean()
             pizza.save()
@@ -112,7 +111,7 @@ class PizzaTests(TestCase):
         Pizza without name is not created
         """
         pizza = Pizza()
-    
+
         with self.assertRaises(ValidationError):
             pizza.full_clean()
             pizza.save()
@@ -126,7 +125,7 @@ class PizzaSizeTests(TestCase):
         topping.save()
         self.pizza = Pizza(name="Cheese Pizza")
         self.pizza.save()
-        self.pizza.toppings.add(topping)     
+        self.pizza.toppings.add(topping)
 
     def test_is_created_working_case(self):
         """
@@ -134,9 +133,9 @@ class PizzaSizeTests(TestCase):
         """
         pizza_size = PizzaSize(
             name="Normal",
-            diameter = 30,
-            pizza = self.pizza,
-            price = Decimal(7))
+            diameter=30,
+            pizza=self.pizza,
+            price=Decimal(7))
         pizza_size.full_clean()
         pizza_size.save()
         self.assertIs(pizza_size.pk, not None)
@@ -147,21 +146,21 @@ class PizzaSizeTests(TestCase):
         """
         pizza_size = PizzaSize(
             name="Normal",
-            diameter = 30,
-            pizza = self.pizza,
-            price = Decimal(7))
+            diameter=30,
+            pizza=self.pizza,
+            price=Decimal(7))
         pizza_size.full_clean()
         pizza_size.save()
         pizza_size = PizzaSize(
             name="Normal",
-            diameter = 31, #Slightly different price to differentiate
-            pizza = self.pizza,
-            price = Decimal(8)) #Slightly different price to differentiate
+            diameter=31, #Slightly different price to differentiate
+            pizza=self.pizza,
+            price=Decimal(8)) #Slightly different price to differentiate
         with self.assertRaises(ValidationError):
             #full_clean called to check validations (MinValueValidator, MaxValueValidator)
             #   Called explicitly to not cause issues in forms
             #Another solution: use a ModelForm
-            pizza_size.full_clean() 
+            pizza_size.full_clean()
             pizza_size.save()
             if pizza_size.pk is None:
                 raise ValidationError
@@ -172,16 +171,16 @@ class PizzaSizeTests(TestCase):
         """
         pizza_size = PizzaSize(
             name="Normal",
-            diameter = 30,
-            pizza = self.pizza,
-            price = Decimal(7))
+            diameter=30,
+            pizza=self.pizza,
+            price=Decimal(7))
         pizza_size.full_clean()
         pizza_size.save()
         pizza_size = PizzaSize(
             name="More Normal",
-            diameter = 30,
-            pizza = self.pizza,
-            price = Decimal(7))
+            diameter=30,
+            pizza=self.pizza,
+            price=Decimal(7))
         pizza_size.full_clean()
         pizza_size.save()
         self.assertIs(pizza_size.pk, not None)
@@ -192,9 +191,9 @@ class PizzaSizeTests(TestCase):
         """
         pizza_size = PizzaSize(
             name="Normal",
-            diameter = 30,
-            pizza = self.pizza,
-            price = Decimal(7))
+            diameter=30,
+            pizza=self.pizza,
+            price=Decimal(7))
         pizza_size.full_clean()
         pizza_size.save()
 
@@ -206,9 +205,9 @@ class PizzaSizeTests(TestCase):
 
         pizza_size = PizzaSize(
             name="Normal",
-            diameter = 30,
-            pizza = pizza,
-            price = Decimal(7))
+            diameter=30,
+            pizza=pizza,
+            price=Decimal(7))
         pizza_size.full_clean()
         pizza_size.save()
         self.assertIs(pizza_size.pk, not None)
@@ -220,10 +219,10 @@ class PizzaSizeTests(TestCase):
         pizza_size = PizzaSize(
             name="Extra negative",
             diameter=-1,
-            pizza = self.pizza,
-            price = Decimal(10))
+            pizza=self.pizza,
+            price=Decimal(10))
         with self.assertRaises(ValidationError):
-            pizza_size.full_clean() 
+            pizza_size.full_clean()
             pizza_size.save()
             if pizza_size.pk is None:
                 raise ValidationError
@@ -233,10 +232,10 @@ class PizzaSizeTests(TestCase):
         Pizza size with diameter 0 is not created
         """
         pizza_size = PizzaSize(
-            name="Empty space", 
+            name="Empty space",
             diameter=0,
-            pizza = self.pizza,
-            price = Decimal(10))
+            pizza=self.pizza,
+            price=Decimal(10))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
@@ -250,8 +249,8 @@ class PizzaSizeTests(TestCase):
         pizza_size = PizzaSize(
             name="Extra Small",
             diameter=1,
-            pizza = self.pizza,
-            price= Decimal(10))
+            pizza=self.pizza,
+            price=Decimal(10))
         pizza_size.full_clean()
         pizza_size.save()
         self.assertIs(pizza_size.pk, not None)
@@ -261,10 +260,10 @@ class PizzaSizeTests(TestCase):
         Pizza size with maximum diameter 100 is created
         """
         pizza_size = PizzaSize(
-            name="Extra Large", 
+            name="Extra Large",
             diameter=100,
-            pizza = self.pizza,
-            price = Decimal(10))
+            pizza=self.pizza,
+            price=Decimal(10))
         pizza_size.full_clean()
         pizza_size.save()
         self.assertIs(pizza_size.pk, not None)
@@ -274,25 +273,25 @@ class PizzaSizeTests(TestCase):
         Pizza size with maximum diameter 101 is not created
         """
         pizza_size = PizzaSize(
-            name="Too Much Extra", 
+            name="Too Much Extra",
             diameter=101,
-            pizza = self.pizza,
-            price = Decimal(10))
+            pizza=self.pizza,
+            price=Decimal(10))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
             if pizza_size.pk is None:
                 raise ValidationError
-    
+
     def test_is_created_with_negative_price(self):
         """
         Pizza size with negative price -0.01 is not created
         """
         pizza_size = PizzaSize(
-            name="Debt", 
+            name="Debt",
             diameter=10,
-            pizza = self.pizza,
-            price = Decimal("-0.01"))
+            pizza=self.pizza,
+            price=Decimal("-0.01"))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
@@ -304,10 +303,10 @@ class PizzaSizeTests(TestCase):
         Pizza size with price 0 is not created
         """
         pizza_size = PizzaSize(
-            name="Free", 
+            name="Free",
             diameter=10,
-            pizza = self.pizza,
-            price = Decimal("0"))
+            pizza=self.pizza,
+            price=Decimal("0"))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
@@ -319,10 +318,10 @@ class PizzaSizeTests(TestCase):
         Pizza size with price 0.001 is not created
         """
         pizza_size = PizzaSize(
-            name="Too low price", 
+            name="Too low price",
             diameter=10,
-            pizza = self.pizza,
-            price = Decimal("0.001"))
+            pizza=self.pizza,
+            price=Decimal("0.001"))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
@@ -334,10 +333,10 @@ class PizzaSizeTests(TestCase):
         Pizza size with price 1.001 is not created
         """
         pizza_size = PizzaSize(
-            name="Invalid price", 
+            name="Invalid price",
             diameter=10,
-            pizza = self.pizza,
-            price = Decimal("1.001"))
+            pizza=self.pizza,
+            price=Decimal("1.001"))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
@@ -349,10 +348,10 @@ class PizzaSizeTests(TestCase):
         Pizza size with minimum price 0.01 is created
         """
         pizza_size = PizzaSize(
-            name="Cheapest", 
+            name="Cheapest",
             diameter=10,
-            pizza = self.pizza,
-            price = Decimal("0.01"))
+            pizza=self.pizza,
+            price=Decimal("0.01"))
         pizza_size.full_clean()
         pizza_size.save()
         self.assertIs(pizza_size.pk, not None)
@@ -362,10 +361,10 @@ class PizzaSizeTests(TestCase):
         Pizza size with maximum price 99.99 is created
         """
         pizza_size = PizzaSize(
-            name="Most expensive", 
+            name="Most expensive",
             diameter=10,
-            pizza = self.pizza,
-            price = Decimal("99.99"))
+            pizza=self.pizza,
+            price=Decimal("99.99"))
         pizza_size.full_clean()
         pizza_size.save()
         self.assertIs(pizza_size.pk, not None)
@@ -375,39 +374,39 @@ class PizzaSizeTests(TestCase):
         Pizza size with too expensive price 100 is not created
         """
         pizza_size = PizzaSize(
-            name="Too expensive", 
+            name="Too expensive",
             diameter=10,
-            pizza = self.pizza,
-            price = Decimal("100"))
+            pizza=self.pizza,
+            price=Decimal("100"))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
             if pizza_size.pk is None:
                 raise ValidationError
-    
+
     def test_is_created_with_empty_name(self):
         """
         Pizza size with empty name is not created
         """
         pizza_size = PizzaSize(
-            name="", 
+            name="",
             diameter=10,
-            pizza = self.pizza,
-            price = Decimal("100"))
+            pizza=self.pizza,
+            price=Decimal("100"))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
             if pizza_size.pk is None:
                 raise ValidationError
-    
+
     def test_is_created_with_no_name(self):
         """
         Pizza size with no name is not created
         """
         pizza_size = PizzaSize(
             diameter=10,
-            pizza = self.pizza,
-            price = Decimal("100"))
+            pizza=self.pizza,
+            price=Decimal("100"))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
@@ -420,8 +419,8 @@ class PizzaSizeTests(TestCase):
         """
         pizza_size = PizzaSize(
             name="Invisible",
-            pizza = self.pizza,
-            price = Decimal("100"))
+            pizza=self.pizza,
+            price=Decimal("100"))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
@@ -435,7 +434,7 @@ class PizzaSizeTests(TestCase):
         pizza_size = PizzaSize(
             name="No-price",
             diameter=10,
-            pizza = self.pizza)
+            pizza=self.pizza)
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()
@@ -449,7 +448,7 @@ class PizzaSizeTests(TestCase):
         pizza_size = PizzaSize(
             name="No-pizza",
             diameter=10,
-            price = Decimal("100"))
+            price=Decimal("100"))
         with self.assertRaises(ValidationError):
             pizza_size.full_clean()
             pizza_size.save()

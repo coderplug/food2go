@@ -16,10 +16,10 @@ class PizzaInline(admin.TabularInline):
 
 class PizzaAdmin(admin.ModelAdmin):
     inlines = [PizzaSizeInline]
-    
+
 # Register your models here.
 admin.site.register(Pizza, PizzaAdmin)
 admin.site.register(PizzaSize)
 admin.site.register(Topping)
-#TODO: Pizza sizes not filtering in User shopping cart view
+#TODO: Pizza sizes not filtering in admin User shopping cart view
 admin.site.register(UserShoppingCart)

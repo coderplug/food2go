@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -32,3 +31,4 @@ class SignUpView(generic.CreateView):
         form = SignUpForm()
     return render(request, 'food2go/signup.html', {'form': form})
     """
+    
